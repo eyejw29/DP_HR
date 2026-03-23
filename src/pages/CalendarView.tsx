@@ -103,7 +103,7 @@ const CalendarView = () => {
         {/* Header & Controls */}
         <div className="mobile-wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
           <div className="mobile-wrap" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <h1 style={{ fontSize: 24, margin: 0, fontWeight: 700, width: 140 }}>
+            <h1 style={{ fontSize: 24, margin: 0, fontWeight: 700, width: 140, whiteSpace: 'nowrap' }}>
               {format(currentDate, 'yyyy년 M월')}
             </h1>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -141,8 +141,11 @@ const CalendarView = () => {
           )}
         </div>
 
-        {/* Grid Header */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, backgroundColor: 'var(--border-color)', border: '1px solid var(--border-color)', borderBottom: 'none' }}>
+        {/* Calendar Grid Container for Mobile Scroll */}
+        <div style={{ overflowX: 'auto', width: '100%', flex: 1 }}>
+          <div style={{ minWidth: 700, display: 'flex', flexDirection: 'column', height: '100%' }}>
+            {/* Grid Header */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, backgroundColor: 'var(--border-color)', border: '1px solid var(--border-color)', borderBottom: 'none' }}>
           {['일', '월', '화', '수', '목', '금', '토'].map((day, idx) => (
             <div key={day} style={{ 
               padding: '12px 8px', textAlign: 'center', fontWeight: 600, fontSize: 13,
@@ -197,7 +200,9 @@ const CalendarView = () => {
               </div>
             );
           })}
+          </div>
         </div>
+      </div>
       </div>
 
       {/* Right Panel (Admin Only) */}
@@ -254,7 +259,7 @@ const CalendarView = () => {
             <div style={{ display: 'flex', gap: 12 }}>
               <div className="form-group" style={{ flex: 1 }}>
                 <label>일수</label>
-                <input type="number" step="0.25" value={adminAddData.amount} onChange={e => setAdminAddData({...adminAddData, amount: Number(e.target.value)})} />
+                <input type="number" step="0.25" inputMode="decimal" value={adminAddData.amount} onChange={e => setAdminAddData({...adminAddData, amount: Number(e.target.value)})} />
               </div>
               <div className="form-group" style={{ flex: 1 }}>
                 <label>휴무 유형</label>

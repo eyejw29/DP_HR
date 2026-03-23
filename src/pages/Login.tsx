@@ -34,12 +34,12 @@ const Login = () => {
       <div style={{ backgroundColor: 'var(--bg-secondary)', padding: 40, borderRadius: 12, border: '1px solid var(--border-color)', width: 400, textAlign: 'center' }}>
         <ShieldCheck size={48} color="var(--accent-primary)" style={{ marginBottom: 20 }} />
         <h1 style={{ fontSize: 24, marginBottom: 8 }}>D.P Works HR System</h1>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 30 }}>테스트 계정으로 로그인해주세요.</p>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 30 }}>안내받은 직원 계정으로 로그인해주세요.</p>
         
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <input 
             type="text" 
-            placeholder="아이디를 입력해주세요 (예: admin, hong, 마케팅홍길동)" 
+            placeholder="사내 메신저로 안내받은 아이디를 입력해주세요" 
             value={loginId} 
             onChange={e => setLoginId(e.target.value)} 
             style={{ padding: '12px 16px', fontSize: 15 }}
@@ -57,14 +57,6 @@ const Login = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: 24, fontSize: 12, color: 'var(--text-tertiary)', textAlign: 'left', background: 'var(--bg-tertiary)', padding: 16, borderRadius: 8 }}>
-          <strong>테스트 계정 목록:</strong><br/>
-          (초기 비밀번호: <code>1234</code>, 관리자는 <code>admin</code>)<br/>
-          - [ADMIN] ID: <code>admin</code><br/>
-          - [EMPLOYEE - 개발] ID: <code>hong</code><br/>
-          - [EMPLOYEE - 마케팅] ID: <code>kim</code><br/>
-          - [EMPLOYEE - 디자인] ID: <code>lee</code>
-        </div>
       </div>
     </div>
   );

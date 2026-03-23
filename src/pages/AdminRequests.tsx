@@ -55,9 +55,9 @@ const AdminRequests = () => {
             <div key={req.id} style={{ 
               backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 24 
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+              <div className="mobile-wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                <div style={{ flex: 1 }}>
+                  <div className="mobile-wrap" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                     <span style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>{emp.name}</span>
                     <span className="badge internal">{emp.branch} / {emp.department}</span>
                     <span className={`badge ${emp.policyType === 'LEGAL' ? 'legal' : 'internal'}`}>
@@ -69,7 +69,7 @@ const AdminRequests = () => {
                   </div>
                 </div>
                 
-                <div style={{ textAlign: 'right', background: 'var(--bg-primary)', padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border-color)' }}>
+                <div style={{ textAlign: 'left', background: 'var(--bg-primary)', padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border-color)', flex: 1, minWidth: 200, maxWidth: 300 }}>
                   <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 4 }}>해당 요청 승인 시 잔여</div>
                   <div style={{ fontSize: 18, fontWeight: 700, color: bal.remainingLeave - req.amount < 0 ? 'var(--danger)' : '#60a5fa' }}>
                     {bal.remainingLeave}일 ➔ {bal.remainingLeave - req.amount}일

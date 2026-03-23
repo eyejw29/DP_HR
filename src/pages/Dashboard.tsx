@@ -103,8 +103,8 @@ const Dashboard = () => {
       </div>
 
       <div className="section-header mobile-wrap" style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <h1 style={{ fontSize: 20, margin: 0 }}>전사 임직원 관리</h1>
+        <div className="mobile-wrap" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <h1 style={{ fontSize: 20, margin: 0, whiteSpace: 'nowrap' }}>전사 임직원 관리</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--bg-secondary)', padding: '4px 8px', borderRadius: 8, border: '1px solid var(--border-color)' }}>
             <button className="btn" style={{ padding: 4 }} onClick={() => setViewMonth(m => subMonths(m, 1))}><ChevronLeft size={16} /></button>
             <span style={{ fontSize: 13, fontWeight: 600, width: 80, textAlign: 'center' }}>{format(viewMonth, 'yyyy년 M월')}</span>

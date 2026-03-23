@@ -60,9 +60,9 @@ const EmployeeDashboard = () => {
   return (
     <div style={{ padding: 24, maxWidth: 1000, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>나의 연차 현황</h1>
+      <div className="mobile-wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="mobile-wrap" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 700, margin: 0, whiteSpace: 'nowrap' }}>나의 연차 현황</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--bg-secondary)', padding: '4px 8px', borderRadius: 8, border: '1px solid var(--border-color)' }}>
             <button className="btn" style={{ padding: 4 }} onClick={() => setViewYear(y => y - 1)}><ChevronLeft size={16} /></button>
             <span style={{ fontSize: 15, fontWeight: 700, width: 70, textAlign: 'center', color: 'var(--accent-primary)' }}>{viewYear}년</span>
@@ -157,6 +157,7 @@ const EmployeeDashboard = () => {
                   type="number" 
                   step={employee.policyType === 'INTERNAL' ? "0.25" : "1"} 
                   min="0"
+                  inputMode="decimal"
                   value={reqData.amount} 
                   onChange={e => setReqData({...reqData, amount: Number(e.target.value)})} 
                 />
