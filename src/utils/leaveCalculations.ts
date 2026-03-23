@@ -85,6 +85,7 @@ export function calculateLeaveBalance(
       const currentYear = currentDate.getFullYear();
       let activeAnnual = 0;
       let annualDesc = "";
+      let carryOver = 0;
 
       if (currentYear === joinYear) {
         const joinMonth = getMonth(joinDate); // 0-indexed
@@ -96,15 +97,26 @@ export function calculateLeaveBalance(
 
         const joinMonth = getMonth(joinDate);
         if ((joinMonth === 10 || joinMonth === 11) && currentYear === joinYear + 1 && getMonth(currentDate) === 0) {
-          activeAnnual += 1;
+          const firstYearUsed = approvedRequests.filter(r => {
+            const ud = parseISO(r.date);
+            return r.type === 'ANNUAL' && isValid(ud) && ud.getFullYear() === joinYear;
+          }).reduce((acc, r) => acc + r.amount, 0);
+          
+          carryOver = Math.max(0, 1 - firstYearUsed);
+          activeAnnual += carryOver;
         }
-        annualDesc = `올해 정기 발생 ${activeAnnual}일`;
+        annualDesc = `올해 정기 발생 ${activeAnnual}일` + (carryOver > 0 ? ` (이월 ${carryOver}일 포함)` : '');
       }
 
       const probationEnd = addMonths(joinDate, 3);
       if (isBefore(currentDate, probationEnd)) {
-        activeAnnual = 0; 
-        annualDesc = `수습 기간 미달 (0일)`;
+        if (carryOver > 0) {
+          activeAnnual = carryOver;
+          annualDesc = `수습 중이나 전년도 이월분 ${carryOver}일에 한해 사용 가능`;
+        } else {
+          activeAnnual = 0; 
+          annualDesc = `수습 기간 미달 (0일)`;
+        }
       }
 
       generated = activeMonthly + activeAnnual;
