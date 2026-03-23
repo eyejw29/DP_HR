@@ -38,8 +38,8 @@ const EmployeeDashboard = () => {
   const handleAddRequest = () => {
     setReqError('');
     if (!reqData.date) { setReqError('신청 일자를 선택하세요.'); return; }
-    if (employee.policyType === 'LEGAL' && reqData.amount !== 1) {
-      setReqError('법정 기준형은 1일 단위로만 신청 가능합니다.'); return;
+    if (employee.policyType === 'LEGAL' && (reqData.amount % 0.5 !== 0)) {
+      setReqError('법정 기준형은 0.5일 또는 1일 단위로 신청 가능합니다.'); return;
     }
     if (employee.policyType === 'INTERNAL' && reqData.amount % 0.25 !== 0) {
       setReqError('내규/강남형은 0.25일 단위로 신청 가능합니다.'); return;
@@ -190,7 +190,7 @@ const EmployeeDashboard = () => {
                 <label>일수</label>
                 <input 
                   type="number" 
-                  step={employee.policyType === 'INTERNAL' ? "0.25" : "1"} 
+                  step={employee.policyType === 'INTERNAL' ? "0.25" : "0.5"} 
                   min="0"
                   inputMode="decimal"
                   value={reqData.amount} 
