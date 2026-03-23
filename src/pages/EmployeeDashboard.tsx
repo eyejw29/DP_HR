@@ -45,13 +45,48 @@ const EmployeeDashboard = () => {
       setReqError('내규/강남형은 0.25일 단위로 신청 가능합니다.'); return;
     }
 
-    addLeaveRequest({
-      employeeId: employee.id,
-      date: reqData.date,
-      amount: Number(reqData.amount),
-      type: employee.policyType === 'INTERNAL' ? reqData.type : 'ANNUAL',
-      memo: reqData.memo
-    });
+    let remainingAmountToRequest = Number(reqData.amount);
+
+    if (employee.policyType === 'INTERNAL') {
+      const reqYearMonth = reqData.date.substring(0, 7);
+      const joinYearMonth = employee.joinDate.substring(0, 7);
+      
+      let availableMonthly = 0;
+      if (reqYearMonth > joinYearMonth) {
+         const monthlyUsedInReqMonth = leaveRequests.filter(r => 
+           r.employeeId === employee.id && 
+           r.type === 'MONTHLY' && 
+           r.status !== 'REJECTED' && 
+           r.date.startsWith(reqYearMonth)
+         ).reduce((acc, r) => acc + r.amount, 0);
+         
+         availableMonthly = Math.max(0, 1 - monthlyUsedInReqMonth);
+      }
+
+      if (availableMonthly > 0) {
+        const amountToTakeFromMonthly = Math.min(remainingAmountToRequest, availableMonthly);
+        
+        addLeaveRequest({
+          employeeId: employee.id,
+          date: reqData.date,
+          amount: amountToTakeFromMonthly,
+          type: 'MONTHLY',
+          memo: reqData.memo
+        });
+        
+        remainingAmountToRequest -= amountToTakeFromMonthly;
+      }
+    }
+
+    if (remainingAmountToRequest > 0) {
+      addLeaveRequest({
+        employeeId: employee.id,
+        date: reqData.date,
+        amount: remainingAmountToRequest,
+        type: 'ANNUAL',
+        memo: reqData.memo
+      });
+    }
 
     setReqData({ date: '', amount: 1, type: 'ANNUAL', memo: '각 부서 팀장 확인 완료했습니다.' });
     alert("우선 결재 대기(Pending) 상태로 신청되었습니다.");
@@ -162,15 +197,6 @@ const EmployeeDashboard = () => {
                   onChange={e => setReqData({...reqData, amount: Number(e.target.value)})} 
                 />
               </div>
-              {employee.policyType === 'INTERNAL' && (
-                <div className="form-group" style={{ flex: 1, minWidth: 120 }}>
-                  <label>유무 유형</label>
-                  <select value={reqData.type} onChange={e => setReqData({...reqData, type: e.target.value as 'ANNUAL'|'MONTHLY'})}>
-                    <option value="ANNUAL">연차</option>
-                    <option value="MONTHLY">월차 (발생 시)</option>
-                  </select>
-                </div>
-              )}
             </div>
 
             <div className="form-group" style={{ marginTop: 16 }}>

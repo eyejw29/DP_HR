@@ -71,19 +71,50 @@ const CalendarView = () => {
     const emp = employees.find(e => e.id === adminAddData.employeeId);
     if (!emp) return;
 
-    // Create and immediately approve
-    const reqId = 'req_admin_' + Date.now();
-    addLeaveRequest({
-      employeeId: adminAddData.employeeId,
-      date: adminAddData.date,
-      amount: Number(adminAddData.amount),
-      type: adminAddData.type,
-      memo: adminAddData.memo
-    });
+    let remainingAmountToRequest = Number(adminAddData.amount);
 
-    // Wait for context to update technically takes a cycle, but we can process it by matching the exact fields or just using the generated ID logic.
-    // Actually, since addLeaveRequest generates ID internally, we can't instantly approve it in one step cleanly without modifying context.
-    // For V2 MVP Admin direct add, just alert they need to approve it, or add a special context function. We'll tell them to approve it in requests.
+    if (emp.policyType === 'INTERNAL') {
+      const reqYearMonth = adminAddData.date.substring(0, 7);
+      const joinYearMonth = emp.joinDate.substring(0, 7);
+      
+      let availableMonthly = 0;
+      if (reqYearMonth > joinYearMonth) {
+         const monthlyUsedInReqMonth = leaveRequests.filter(r => 
+           r.employeeId === emp.id && 
+           r.type === 'MONTHLY' && 
+           r.status !== 'REJECTED' && 
+           r.date.startsWith(reqYearMonth)
+         ).reduce((acc, r) => acc + r.amount, 0);
+         
+         availableMonthly = Math.max(0, 1 - monthlyUsedInReqMonth);
+      }
+
+      if (availableMonthly > 0) {
+        const amountToTakeFromMonthly = Math.min(remainingAmountToRequest, availableMonthly);
+        
+        addLeaveRequest({
+          employeeId: emp.id,
+          date: adminAddData.date,
+          amount: amountToTakeFromMonthly,
+          type: 'MONTHLY',
+          memo: adminAddData.memo
+        });
+        
+        remainingAmountToRequest -= amountToTakeFromMonthly;
+      }
+    }
+
+    if (remainingAmountToRequest > 0) {
+      addLeaveRequest({
+        employeeId: emp.id,
+        date: adminAddData.date,
+        amount: remainingAmountToRequest,
+        type: 'ANNUAL',
+        memo: adminAddData.memo
+      });
+    }
+
+    // Wait for context to update (alert will pause, UI handles state soon)
     alert("요청이 생성되었습니다. [결재/대기 관리] 메뉴에서 승인해주세요!");
     setAdminAddModalOpen(false);
   };
@@ -260,13 +291,6 @@ const CalendarView = () => {
               <div className="form-group" style={{ flex: 1 }}>
                 <label>일수</label>
                 <input type="number" step="0.25" inputMode="decimal" value={adminAddData.amount} onChange={e => setAdminAddData({...adminAddData, amount: Number(e.target.value)})} />
-              </div>
-              <div className="form-group" style={{ flex: 1 }}>
-                <label>휴무 유형</label>
-                <select value={adminAddData.type} onChange={e => setAdminAddData({...adminAddData, type: e.target.value as 'ANNUAL'|'MONTHLY'})}>
-                  <option value="ANNUAL">연차</option>
-                  <option value="MONTHLY">월차</option>
-                </select>
               </div>
             </div>
 
