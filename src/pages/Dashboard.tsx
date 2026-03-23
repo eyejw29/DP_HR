@@ -53,6 +53,21 @@ const Dashboard = () => {
   const unusedThisMonthCount = unusedThisMonthEmployees.length;
   const unusedNamesText = unusedThisMonthEmployees.map(e => e.name).join(', ');
 
+  // Branch Stats (가산 vs 강남 통합 현황)
+  const gasanEmployees = employeesWithBalance.filter(e => e.branch === '가산');
+  const gangnamEmployees = employeesWithBalance.filter(e => e.branch === '강남');
+  
+  const getBranchStats = (branchEmps: EmployeeWithBalance[]) => {
+    return {
+      count: branchEmps.length,
+      pending: branchEmps.reduce((acc, emp) => acc + emp.balance.pendingRequestsCount, 0),
+      remainingSum: branchEmps.reduce((acc, emp) => acc + emp.balance.remainingLeave, 0)
+    };
+  };
+
+  const gasanStats = getBranchStats(gasanEmployees);
+  const gangnamStats = getBranchStats(gangnamEmployees);
+
   return (
     <div style={{ padding: 24, maxWidth: 1400, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
       
@@ -98,6 +113,30 @@ const Dashboard = () => {
           <div style={{ cursor: 'help' }}>
             <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 4 }}>당월 미사용자 위기 지표</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>{unusedThisMonthCount}명</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Branch Integrated Status View */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 20 }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="badge internal" style={{ fontSize: 13 }}>가산 지점</span> 통합 현황
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>소속 직원</div><div style={{ fontSize: 20, fontWeight: 700 }}>{gasanStats.count}명</div></div>
+            <div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>결재 대기</div><div style={{ fontSize: 20, fontWeight: 700, color: 'var(--warning)' }}>{gasanStats.pending}건</div></div>
+            <div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>누적 잔여 휴무</div><div style={{ fontSize: 20, fontWeight: 700, color: '#60a5fa' }}>{gasanStats.remainingSum}일</div></div>
+          </div>
+        </div>
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 20 }}>
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="badge internal" style={{ fontSize: 13 }}>강남 지점</span> 통합 현황
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>소속 직원</div><div style={{ fontSize: 20, fontWeight: 700 }}>{gangnamStats.count}명</div></div>
+            <div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>결재 대기</div><div style={{ fontSize: 20, fontWeight: 700, color: 'var(--warning)' }}>{gangnamStats.pending}건</div></div>
+            <div><div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>누적 잔여 휴무</div><div style={{ fontSize: 20, fontWeight: 700, color: '#60a5fa' }}>{gangnamStats.remainingSum}일</div></div>
           </div>
         </div>
       </div>
@@ -148,14 +187,85 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Main Table V3 */}
-      <div className="table-container" style={{ overflowX: 'auto' }}>
+      {/* Employee List - Vertical Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
+        {(filteredEmployees || []).map(emp => {
+          const monthsOfSvc = differenceInMonths(new Date(), new Date(emp.joinDate));
+          const svcText = monthsOfSvc >= 12 ? `${Math.floor(monthsOfSvc/12)}년 ${monthsOfSvc%12}개월` : `${monthsOfSvc}개월`;
+          return (
+            <div key={emp.id} className="row-hover" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', transition: 'all 0.2s ease' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary)' }}>{emp.name}</span>
+                    <span className="badge internal">{emp.branch}</span>
+                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{emp.department} {emp.position || '사원'}</span>
+                  </div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '6px' }}>
+                    입사: {emp.joinDate} ({svcText})
+                    <span className={`badge ${emp.policyType === 'LEGAL' ? 'legal' : 'internal'}`} style={{ marginLeft: '8px', padding: '2px 6px', fontSize: '10px' }}>
+                      {emp.policyType === 'LEGAL' ? '법정 기준형' : '내규형'}
+                    </span>
+                  </div>
+                </div>
+                <button className="btn" style={{ padding: '6px 12px', fontSize: '12px' }} onClick={() => { setSelectedEmployeeId(emp.id); setDrawerOpen(true); }}>상세/수정</button>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', padding: '12px', background: 'var(--bg-primary)', borderRadius: '8px' }}>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>총 부여</div>
+                  <div style={{ fontWeight: 600, fontSize: '15px' }}>{emp.balance.generatedLeave}일</div>
+                  {emp.policyType === 'INTERNAL' && <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>연 {emp.balance.generatedAnnual} / 월 {emp.balance.generatedMonthly}</div>}
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>사용 휴무</div>
+                  <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--danger)' }}>{emp.balance.usedLeave}일</div>
+                  {emp.policyType === 'INTERNAL' && <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>연 {emp.balance.usedAnnual} / 월 {emp.balance.usedMonthly}</div>}
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>남은 휴무</div>
+                  <div style={{ fontWeight: 700, fontSize: '16px', color: '#60a5fa' }}>{emp.balance.remainingLeave}일</div>
+                  {emp.policyType === 'INTERNAL' && <div style={{ fontSize: '11px', color: 'var(--text-primary)', marginTop: '2px' }}>연 {Math.max(0, (emp.balance.generatedAnnual||0) - (emp.balance.usedAnnual||0))} / 월 {Math.max(0, (emp.balance.generatedMonthly||0) - (emp.balance.usedMonthly||0))}</div>}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingTop: '4px', borderTop: '1px dashed var(--border-color)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>산정 근거:</span>
+                  <span style={{ color: '#60a5fa', textAlign: 'right', display: 'inline-block', flex: 1, paddingLeft: 12 }}>{emp.balance.breakdownText}</span>
+                </div>
+                {emp.balance.pendingRequestsCount > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>결재 대기:</span>
+                    <span style={{ color: 'var(--warning)', fontWeight: 600 }}>{emp.balance.pendingRequestsCount}건 대기</span>
+                  </div>
+                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>설정/갱신:</span>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{emp.statusNotes || '-'} | {emp.balance.nextAccrualDate || '-'}</span>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+        {filteredEmployees.length === 0 && (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: 'var(--text-tertiary)', background: 'var(--bg-secondary)', borderRadius: '12px' }}>
+            조건에 맞는 직원이 없습니다.
+          </div>
+        )}
+      </div>
+
+      {/* Restored Original Table View */}
+      <div className="section-header mobile-wrap" style={{ marginTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ fontSize: 18, margin: 0 }}>전체 통합 리스트 (표 형식)</h2>
+      </div>
+      <div className="table-container" style={{ overflowX: 'auto', marginTop: 16 }}>
         <table style={{ minWidth: 1400 }}>
           <thead>
             <tr>
               <th>이름</th>
               <th>입사일 (근속)</th>
-              <th>지점 / 부서</th>
+              <th>지점 / 부서 및 직급</th>
               <th>적용 규정</th>
               <th>총 부여 휴무</th>
               <th>휴무 구성 (산정 근거)</th>
@@ -176,7 +286,7 @@ const Dashboard = () => {
                   <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{emp.name}</td>
                   <td style={{ fontSize: 13 }}>{emp.joinDate} <span style={{ color: 'var(--text-tertiary)', fontSize: 11, marginLeft: 6 }}>({svcText})</span></td>
                   <td>
-                    <span className="badge internal">{emp.branch}</span> <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{emp.department}</span>
+                    <span className="badge internal">{emp.branch}</span> <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{emp.department} {emp.position || '사원'}</span>
                   </td>
                   <td>
                     <span className={`badge ${emp.policyType === 'LEGAL' ? 'legal' : 'internal'}`}>

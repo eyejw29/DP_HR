@@ -35,9 +35,9 @@ const initialUsers: User[] = [
 ];
 
 const initialEmployees: Employee[] = [
-  { id: '1', name: '홍길동', joinDate: '2025-01-10', branch: '가산', department: '개발', policyType: 'LEGAL', statusNotes: '팀장' },
-  { id: '2', name: '김지현', joinDate: '2022-05-15', branch: '강남', department: '마케팅', policyType: 'INTERNAL', statusNotes: '강남 지점장' },
-  { id: '3', name: '이지훈', joinDate: '2026-02-01', branch: '가산', department: '디자인', policyType: 'LEGAL', statusNotes: '신규 입사자' },
+  { id: '1', name: '홍길동', joinDate: '2025-01-10', branch: '가산', department: '개발', position: '팀장', policyType: 'LEGAL', statusNotes: '' },
+  { id: '2', name: '김지현', joinDate: '2022-05-15', branch: '강남', department: '마케팅', position: '지점장', policyType: 'INTERNAL', statusNotes: '' },
+  { id: '3', name: '이지훈', joinDate: '2026-02-01', branch: '가산', department: '디자인', position: '사원', policyType: 'LEGAL', statusNotes: '신규 입사자' },
 ];
 
 const initialRequests: LeaveRequest[] = [

@@ -20,6 +20,7 @@ export interface Employee {
   joinDate: string; // YYYY-MM-DD
   branch: Branch;
   department: Department;
+  position?: string;
   policyType: PolicyType;
   statusNotes: string;
 }

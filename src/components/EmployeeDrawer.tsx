@@ -24,6 +24,7 @@ const EmployeeDrawer: React.FC<EmployeeDrawerProps> = ({ employeeId, onClose }) 
     branch: '가산',
     department: '개발',
     policyType: 'LEGAL',
+    position: '사원',
     statusNotes: ''
   });
 
@@ -34,6 +35,7 @@ const EmployeeDrawer: React.FC<EmployeeDrawerProps> = ({ employeeId, onClose }) 
         joinDate: existingEmp.joinDate,
         branch: existingEmp.branch,
         department: existingEmp.department,
+        position: existingEmp.position || '사원',
         policyType: existingEmp.policyType,
         statusNotes: existingEmp.statusNotes
       });
@@ -137,6 +139,11 @@ const EmployeeDrawer: React.FC<EmployeeDrawerProps> = ({ employeeId, onClose }) 
                 <option value="마케팅">마케팅 (Marketing)</option>
                 <option value="디자인">디자인 (Design)</option>
               </select>
+            </div>
+            
+            <div className="form-group">
+              <label>직급</label>
+              <input type="text" value={formData.position || ''} onChange={e => setFormData({...formData, position: e.target.value})} placeholder="예: 팀장, 대리, 사원 등" />
             </div>
 
             <div className="form-group">
