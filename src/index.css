@@ -267,3 +267,145 @@ select:focus, input:focus {
 .form-group input, .form-group select, .form-group textarea {
   width: 100%;
 }
+
+/* =========================================
+   Mobile Responsiveness
+   ========================================= */
+.mobile-only {
+  display: none !important;
+}
+
+/* Stats Layout Class */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Bottom Navigation (Mobile) */
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) 2fr;
+}
+
+.profile-grid-reverse {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.flex-mobile-column {
+  display: flex;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background-color: rgba(22, 24, 29, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  flex: 1;
+  height: 100%;
+}
+
+.bottom-nav-link.active {
+  color: var(--accent-primary);
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex !important;
+  }
+  
+  .desktop-only {
+    display: none !important;
+  }
+
+  .app-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    /* Room for bottom nav on mobile */
+    padding-bottom: 65px; 
+    height: 100vh;
+  }
+
+  .page-container {
+    padding: 16px;
+  }
+
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .profile-grid, .profile-grid-reverse {
+    grid-template-columns: 1fr !important;
+  }
+
+  .flex-mobile-column {
+    flex-direction: column !important;
+  }
+
+  .calendar-cell {
+    min-height: 80px !important;
+    padding: 2px !important;
+  }
+
+  .drawer {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  /* Allow filter bars to wrap */
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+  .filter-bar input, .filter-bar select {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .mobile-wrap {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .action-buttons .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+

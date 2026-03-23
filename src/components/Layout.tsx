@@ -15,7 +15,8 @@ const Layout = () => {
 
   return (
     <div className="app-container">
-      <div className="sidebar">
+      {/* Desktop Sidebar */}
+      <div className="sidebar desktop-only">
         <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 24, height: 24, borderRadius: 4, background: 'var(--accent-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 'bold' }}>D</div>
           DP Works HR
@@ -49,11 +50,10 @@ const Layout = () => {
           Role-Based Access
         </div>
       </div>
-      
       <div className="main-content">
         <div className="topbar">
           <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-primary)' }}>
-            {isAdmin ? '관리자 워크스페이스' : '임직원 워크스페이스'}
+            DP Works HR
           </div>
           <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
             <span style={{ fontSize: 13, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -70,6 +70,33 @@ const Layout = () => {
           <Outlet />
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="bottom-nav mobile-only">
+        {isAdmin ? (
+          <>
+            <NavLink to="/admin/dashboard" className={({ isActive }) => `bottom-nav-link ${isActive ? 'active' : ''}`}>
+              <LayoutDashboard size={20} /><span>임직원</span>
+            </NavLink>
+            <NavLink to="/admin/requests" className={({ isActive }) => `bottom-nav-link ${isActive ? 'active' : ''}`}>
+              <CheckSquare size={20} /><span>결재</span>
+            </NavLink>
+            <NavLink to="/admin/calendar" className={({ isActive }) => `bottom-nav-link ${isActive ? 'active' : ''}`}>
+              <CalendarDays size={20} /><span>일정</span>
+            </NavLink>
+          </>
+        ) : (
+          <>
+            <NavLink to="/my/dashboard" className={({ isActive }) => `bottom-nav-link ${isActive ? 'active' : ''}`}>
+              <UserIcon size={20} /><span>내 연차</span>
+            </NavLink>
+            <NavLink to="/my/calendar" className={({ isActive }) => `bottom-nav-link ${isActive ? 'active' : ''}`}>
+              <CalendarDays size={20} /><span>일정</span>
+            </NavLink>
+          </>
+        )}
+      </div>
+
     </div>
   );
 };

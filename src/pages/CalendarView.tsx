@@ -95,14 +95,14 @@ const CalendarView = () => {
   });
 
   return (
-    <div style={{ padding: 24, maxWidth: 1400, margin: '0 auto', width: '100%', display: 'flex', gap: 24, height: '100%' }}>
+    <div className="flex-mobile-column" style={{ padding: 24, maxWidth: 1400, margin: '0 auto', width: '100%', gap: 24, height: '100%' }}>
       
       {/* Calendar Side */}
       <div style={{ flex: 3, display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 24, overflow: 'hidden' }}>
         
         {/* Header & Controls */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="mobile-wrap" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <div className="mobile-wrap" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <h1 style={{ fontSize: 24, margin: 0, fontWeight: 700, width: 140 }}>
               {format(currentDate, 'yyyy년 M월')}
             </h1>
@@ -117,7 +117,7 @@ const CalendarView = () => {
           </div>
           
           {isAdmin && (
-            <div style={{ display: 'flex', gap: 12 }}>
+            <div className="action-buttons" style={{ display: 'flex', gap: 12 }}>
               <select value={filterBranch} onChange={e => setFilterBranch(e.target.value)} style={{ padding: '6px 12px' }}>
                 <option value="ALL">전체 지점</option>
                 {branches.map(b => <option key={b} value={b}>{b}</option>)}

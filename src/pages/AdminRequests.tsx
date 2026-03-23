@@ -38,7 +38,7 @@ const AdminRequests = () => {
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 1200, margin: '0 auto', width: '100%', display: 'flex', gap: 24, alignItems: 'flex-start' }}>
+    <div className="flex-mobile-column" style={{ padding: 24, maxWidth: 1200, margin: '0 auto', width: '100%', gap: 24, alignItems: 'flex-start' }}>
       
       {/* Left Panel: Pending Requests */}
       <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: 16 }}>

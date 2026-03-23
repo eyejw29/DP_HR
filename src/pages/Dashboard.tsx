@@ -57,7 +57,7 @@ const Dashboard = () => {
     <div style={{ padding: 24, maxWidth: 1400, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 24 }}>
       
       {/* V3 Summary Widgets */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+      <div className="stats-grid">
         <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 20, display: 'flex', alignItems: 'center', gap: 16 }}>
           <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Users size={24} />
@@ -102,7 +102,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="section-header" style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="section-header mobile-wrap" style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <h1 style={{ fontSize: 20, margin: 0 }}>전사 임직원 관리</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--bg-secondary)', padding: '4px 8px', borderRadius: 8, border: '1px solid var(--border-color)' }}>
@@ -112,7 +112,7 @@ const Dashboard = () => {
             <button className="btn" style={{ padding: '4px 8px', fontSize: 12 }} onClick={() => setViewMonth(new Date())}>현재</button>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div className="action-buttons" style={{ display: 'flex', gap: 12 }}>
           <button className="btn" onClick={() => { setPolicyTypeForModal('LEGAL'); setPolicyModalOpen(true); }}><FileText size={16} /> 법정 규정 열람/수정</button>
           <button className="btn" onClick={() => { setPolicyTypeForModal('INTERNAL'); setPolicyModalOpen(true); }}><FileText size={16} /> 강남 내규 열람/수정</button>
           <button className="btn btn-primary" onClick={() => { setSelectedEmployeeId(null); setDrawerOpen(true); }}><Plus size={16} /> 직원 추가</button>

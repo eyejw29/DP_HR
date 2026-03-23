@@ -92,7 +92,7 @@ const EmployeeDrawer: React.FC<EmployeeDrawerProps> = ({ employeeId, onClose }) 
 
         <div style={{ padding: 24, flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div className="profile-grid" style={{ gap: 16 }}>
             <div className="form-group">
               <label>이름</label>
               <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="이름 입력" />
@@ -155,7 +155,7 @@ const EmployeeDrawer: React.FC<EmployeeDrawerProps> = ({ employeeId, onClose }) 
           {isEditing && balance && (
             <div style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 20 }}>
               <h3 style={{ fontSize: 15, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}><Calendar size={16} /> 연차 사용 요약</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 16 }}>
+              <div className="stats-grid" style={{ marginBottom: 16, gap: 12 }}>
                 <div style={{ background: 'var(--bg-primary)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
                   <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>초기 발생</div>
                   <div style={{ fontSize: 16, fontWeight: 600 }}>{balance.generatedLeave}일</div>

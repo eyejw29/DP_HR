@@ -75,7 +75,7 @@ const EmployeeDashboard = () => {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1fr) 2fr', gap: 24 }}>
+      <div className="profile-grid" style={{ gap: 24 }}>
         
         {/* Profile / Balance V3 Display */}
         <div style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 12, padding: 24 }}>
